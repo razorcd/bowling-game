@@ -1,10 +1,11 @@
 class Game::Frame
   TOTAL_PINS = 10
-  attr_reader :score
 
   def initialize last_round: false
-    @score = 0
-    @up_pins_count = TOTAL_PINS
+    @allowed_trows = 2
+    @last_round = last_round
+    @score = []
+    reset_up_pins
     @throws_count = 0
     @expected_extra_throws_count = 0
   end
@@ -14,27 +15,49 @@ class Game::Frame
     raise "can't knock down more pins than are still standing" if knocked_pins > @up_pins_count
 
     @up_pins_count -= knocked_pins
-    @score += knocked_pins
+    @score << knocked_pins
     @throws_count += 1
 
-    check_spare_or_strike if over?
+    allow_one_more_throw if (strike? || spare?) && @last_round
+    update_expected_extra_throws_count if over? && @last_round.!
   end
 
   def update_extra_score added_points:
     return false if @expected_extra_throws_count == 0
-    @score += added_points
+    @score << added_points
     @expected_extra_throws_count -= 1
     true
   end
 
+  def score
+    @score.inject(&:+).to_i
+  end
+
   def over?
-    @up_pins_count == 0 || @throws_count == 2
+    @up_pins_count == 0 || @throws_count == @allowed_trows
   end
 
 private
 
-  def check_spare_or_strike
-    @expected_extra_throws_count = 2 if @throws_count == 1 && @up_pins_count == 0 #strike  (added also `@up_pins_count == 0` for readability only)
-    @expected_extra_throws_count = 1 if @throws_count == 2 && @up_pins_count == 0 #spare
+  def strike?
+    @throws_count == 1 && (@score[0] == TOTAL_PINS)
+  end
+
+  def spare?
+    @throws_count == 2 && (@score[0]+@score[1] == TOTAL_PINS)
+  end
+
+  def update_expected_extra_throws_count
+    @expected_extra_throws_count = 2 if strike?
+    @expected_extra_throws_count = 1 if spare?
+  end
+
+  def reset_up_pins
+    @up_pins_count = TOTAL_PINS
+  end
+
+  def allow_one_more_throw
+    reset_up_pins
+    @allowed_trows = 3
   end
 end
