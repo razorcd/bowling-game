@@ -72,11 +72,34 @@ RSpec.describe Game do
     it "should not allow more throws" do
       game.throw! knocked_pins: 5
       game.throw! knocked_pins: 3
-
       expect(game.score).to eq 80
       expect(game.game_over?).to eq true
-
       expect { game.throw! knocked_pins: 3 }.to raise_error
+    end
+
+    it "should handle strike in last frame" do
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 82
+      expect(game.game_over?).to eq false
+
+      expect { game.throw! knocked_pins: 3 }.not_to raise_error
+      expect(game.score).to eq 85
+      expect(game.game_over?).to eq false
+
+      expect { game.throw! knocked_pins: 4 }.not_to raise_error
+      expect(game.score).to eq 89
+      expect(game.game_over?).to eq true
+    end
+
+    it "should handle spare in last frame" do
+      game.throw! knocked_pins: 4
+      game.throw! knocked_pins: 6
+      expect(game.score).to eq 82
+      expect(game.game_over?).to eq false
+
+      expect { game.throw! knocked_pins: 3 }.not_to raise_error
+      expect(game.score).to eq 85
+      expect(game.game_over?).to eq true
     end
   end
 
@@ -84,7 +107,6 @@ RSpec.describe Game do
     specify "2 strikes in a row" do
       game.throw! knocked_pins: 5
       game.throw! knocked_pins: 3
-
       expect(game.score).to eq 8
 
       game.throw! knocked_pins: 10
@@ -102,7 +124,6 @@ RSpec.describe Game do
     specify "with strikes and spares in a row" do
       game.throw! knocked_pins: 5
       game.throw! knocked_pins: 3
-
       expect(game.score).to eq 8
 
       game.throw! knocked_pins: 10
@@ -122,6 +143,43 @@ RSpec.describe Game do
       expect(game.score).to eq 55
       game.throw! knocked_pins: 4
       expect(game.score).to eq 59
+    end
+
+    specify "with strike at last 2 frames" do
+      (Game::TOTOAL_FRAMES_COUNT-2).times do
+        game.throw! knocked_pins: 5
+        game.throw! knocked_pins: 3
+      end
+      expect(game.score).to eq 64
+
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 74
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 94
+      game.throw! knocked_pins: 5
+      expect(game.score).to eq 104
+      game.throw! knocked_pins: 3
+      expect(game.score).to eq 107
+      expect(game.game_over?).to eq true
+    end
+
+    specify "with spare at last frame" do
+      (Game::TOTOAL_FRAMES_COUNT-1).times do
+        game.throw! knocked_pins: 5
+        game.throw! knocked_pins: 3
+      end
+      expect(game.score).to eq 72
+
+      game.throw! knocked_pins: 4
+      game.throw! knocked_pins: 6
+      expect(game.score).to eq 82
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 7
+      expect(game.score).to eq 89
+      expect(game.game_over?).to eq true
     end
   end
 end

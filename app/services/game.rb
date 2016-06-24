@@ -10,7 +10,7 @@ class Game
     raise "The game is over, no more throws allowed." if game_over?
     @frames.last.throw! knocked_pins: knocked_pins
     update_old_frames_with knocked_pins
-    start_new_frame if @frames.last.over? && reached_frame_limit?.!
+    start_new_frame if @frames.last.over? && reached_last_frame?.!
   end
 
   def score  #memoize for realtime compatibility
@@ -18,7 +18,7 @@ class Game
   end
 
   def game_over?
-    reached_frame_limit? && @frames.last.over?
+    reached_last_frame? && @frames.last.over?
   end
 
 private
@@ -31,11 +31,14 @@ private
   end
 
   def start_new_frame
-    @frames << Game::Frame.new
+    @frames << (Game::Frame.new last_round: reached_before_last_frame?)
   end
 
-  def reached_frame_limit?
+  def reached_last_frame?
     @frames.count == TOTOAL_FRAMES_COUNT
   end
 
+  def reached_before_last_frame?
+    @frames.count == TOTOAL_FRAMES_COUNT-1
+  end
 end
