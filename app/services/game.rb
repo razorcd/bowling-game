@@ -16,7 +16,6 @@ class Game
     update_score
   end
 
-
   def game_over?
     reached_last_frame? && @frames.last.over?
   end

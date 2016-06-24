@@ -181,5 +181,56 @@ RSpec.describe Game do
       expect(game.score).to eq 89
       expect(game.game_over?).to eq true
     end
+
+    specify "custome - youtube" do
+      # simulating: 'https://www.youtube.com/watch?v=aBe71sD8o8c'
+      game.throw! knocked_pins: 8
+      game.throw! knocked_pins: 2
+      expect(game.score).to eq 10
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 7
+      game.throw! knocked_pins: 3
+      expect(game.score).to eq 27
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 3
+      game.throw! knocked_pins: 4
+      expect(game.score).to eq 37
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 47
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 2
+      game.throw! knocked_pins: 8
+      expect(game.score).to eq 67
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 87
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 107
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 8
+      game.throw! knocked_pins: 0
+      expect(game.score).to eq 131
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 141
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 8
+      game.throw! knocked_pins: 2
+      expect(game.score).to eq 161
+      game.throw! knocked_pins: 9
+      expect(game.score).to eq 170
+      expect(game.game_over?).to eq true
+    end
   end
 end
