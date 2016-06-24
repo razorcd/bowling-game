@@ -11,8 +11,8 @@ class Game::Frame
   end
 
   def throw! knocked_pins:
-    raise "can't throw anymore" if over?
-    raise "can't knock down more pins than are still standing" if knocked_pins > @up_pins_count
+    raise(Game::FrameError, "can't throw anymore") if over?
+    raise(Game::FrameError, "can't knock down more pins than are still standing") if knocked_pins > @up_pins_count
 
     @up_pins_count -= knocked_pins
     @score << knocked_pins
@@ -60,4 +60,7 @@ private
     reset_up_pins
     @allowed_trows = 3
   end
+end
+
+class Game::FrameError < StandardError
 end

@@ -7,7 +7,7 @@ class Game
   end
 
   def throw! knocked_pins:
-    raise "The game is over, no more throws allowed." if game_over?
+    raise(GameError, "The game is over, no more throws allowed.") if game_over?
     @frames.last.throw! knocked_pins: knocked_pins
     update_old_frames_with knocked_pins
     start_new_frame if @frames.last.over? && reached_last_frame?.!
@@ -41,4 +41,7 @@ private
   def reached_before_last_frame?
     @frames.count == TOTOAL_FRAMES_COUNT-1
   end
+end
+
+class GameError < StandardError
 end

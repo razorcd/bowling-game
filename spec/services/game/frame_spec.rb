@@ -16,7 +16,7 @@ RSpec.describe Game::Frame do
 
       it "should not be able to knok more pins then standing" do
         expect { frame.throw! knocked_pins: (Game::Frame::TOTAL_PINS + 1) }.
-            to raise_error
+            to raise_error(Game::FrameError)
       end
 
       it "should not be over at start or after a throw with less knocks" do
@@ -46,7 +46,7 @@ RSpec.describe Game::Frame do
       end
 
       it "should not be able to throw again" do
-        expect { frame.throw!(knocked_pins: 5) }.to raise_error
+        expect { frame.throw!(knocked_pins: 5) }.to raise_error(Game::FrameError)
       end
     end
 
@@ -72,7 +72,7 @@ RSpec.describe Game::Frame do
       end
 
       it "should not be able to throw again" do
-        expect { frame.throw!(knocked_pins: 5) }.to raise_error
+        expect { frame.throw!(knocked_pins: 5) }.to raise_error(Game::FrameError)
       end
     end
 
@@ -99,7 +99,7 @@ RSpec.describe Game::Frame do
       end
 
       it "should not be able to throw again" do
-        expect { frame.throw!(knocked_pins: 5) }.to raise_error
+        expect { frame.throw!(knocked_pins: 5) }.to raise_error(Game::FrameError)
       end
     end
   end
@@ -116,7 +116,7 @@ RSpec.describe Game::Frame do
       frame.throw! knocked_pins: 2
       expect(frame.score).to eq 5
       expect(frame.over?).to eq true
-      expect { frame.throw! knocked_pins: 1 }.to raise_error
+      expect { frame.throw! knocked_pins: 1 }.to raise_error(Game::FrameError)
     end
 
     it "should allow max 3 throws if first is a strike" do
@@ -131,7 +131,7 @@ RSpec.describe Game::Frame do
       frame.throw! knocked_pins: 3
       expect(frame.score).to eq 15
       expect(frame.over?).to eq true
-      expect { frame.throw! knocked_pins: 1 }.to raise_error
+      expect { frame.throw! knocked_pins: 1 }.to raise_error(Game::FrameError)
     end
 
     it "should allow max 3 throws if first 2 are a spare" do
@@ -143,7 +143,7 @@ RSpec.describe Game::Frame do
       frame.throw! knocked_pins: 2
       expect(frame.score).to eq 12
       expect(frame.over?).to eq true
-      expect { frame.throw! knocked_pins: 1 }.to raise_error
+      expect { frame.throw! knocked_pins: 1 }.to raise_error(Game::FrameError)
     end
   end
 end

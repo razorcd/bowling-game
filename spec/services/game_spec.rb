@@ -74,7 +74,7 @@ RSpec.describe Game do
       game.throw! knocked_pins: 3
       expect(game.score).to eq 80
       expect(game.game_over?).to eq true
-      expect { game.throw! knocked_pins: 3 }.to raise_error
+      expect { game.throw! knocked_pins: 3 }.to raise_error(GameError)
     end
 
     it "should handle strike in last frame" do
