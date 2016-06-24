@@ -1,14 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe Game, type: :model do
+  let(:game) { Game.new }
+
   it "should have score and frames" do
     expect(Game.new.score).to eq 0
     expect(Game.new.frames).to eq []
   end
 
   context "one frame" do
-    let(:game) { Game.new }
-
     it "should show correct score" do
       game.throw! knocked_pins: 4
       expect(game.score).to eq 4
@@ -19,9 +19,7 @@ RSpec.describe Game, type: :model do
     end
   end
 
-  context "two frames" do
-    let(:game) { Game.new }
-
+  context "multiple games" do
     it "should show correct score" do
       game.throw! knocked_pins: 4
       game.throw! knocked_pins: 3
@@ -32,6 +30,30 @@ RSpec.describe Game, type: :model do
       expect(game.score).to eq 14
       expect(game.frames).to eq [[4,3], [5,2]]
     end
-  end
 
+    context "with a strike" do
+      it "should have correct score" do
+        game.throw! knocked_pins: 10
+        expect(game.score).to eq 10
+
+        game.throw! knocked_pins: 5
+        game.throw! knocked_pins: 3
+        expect(game.score).to eq 26
+        expect(game.frames).to eq [[10, 5, 3], [5,3]]
+      end
+    end
+
+    context "with a spare" do
+      it "should have correct score" do
+        game.throw! knocked_pins: 4
+        game.throw! knocked_pins: 6
+        expect(game.score).to eq 10
+
+        game.throw! knocked_pins: 5
+        game.throw! knocked_pins: 3
+        expect(game.score).to eq 23
+        expect(game.frames).to eq [[4, 6, 5], [5,3]]
+      end
+    end
+  end
 end
