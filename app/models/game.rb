@@ -6,10 +6,15 @@ class Game < ActiveRecord::Base
   end
 
   def throw! knocked_pins:
+    raise(GameError, "This game is over") if game_over?
     frames << [] if frame_completed?(frames.last)
     frames.last << knocked_pins
     fill_older_open_frames_with knocked_pins
     save!
+  end
+
+  def game_over?
+    frames.size==10 && frame_completed?(frames.last)
   end
 
 private
@@ -27,4 +32,7 @@ private
     end
 
   end
+end
+
+class GameError < StandardError
 end

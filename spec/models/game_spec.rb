@@ -14,7 +14,6 @@ RSpec.describe Game, type: :model do
       expect(game.score).to eq 4
       game.throw! knocked_pins: 3
       expect(game.score).to eq 7
-
       expect(game.frames).to eq [[4,3]]
     end
   end
@@ -55,5 +54,25 @@ RSpec.describe Game, type: :model do
         expect(game.frames).to eq [[4, 6, 5], [5,3]]
       end
     end
+  end
+
+  context "all frames" do
+    before :each do
+      (10-1).times do
+        game.throw! knocked_pins: 5
+        game.throw! knocked_pins: 3
+      end
+    end
+
+    it "should not allow more throws" do
+      game.throw! knocked_pins: 5
+      game.throw! knocked_pins: 3
+      expect(game.score).to eq 80
+      expect(game.frames).to eq [[5,3],[5,3],[5,3],[5,3],[5,3],[5,3],[5,3],[5,3],[5,3],[5,3]]
+      expect(game.game_over?).to eq true
+      expect { game.throw! knocked_pins: 3 }.to raise_error(GameError)
+    end
+
+
   end
 end
