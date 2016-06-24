@@ -105,7 +105,7 @@ RSpec.describe Game::Frame do
   end
 
   context "IS a last frame" do
-    let(:frame) { Game::Frame.new last_round: true}
+    let(:frame) { Game::Frame.new last: true}
 
     it "should have score 0 at start" do
       expect(frame.score).to eq 0

@@ -31,7 +31,7 @@ private
   end
 
   def start_new_frame
-    @frames << (Game::Frame.new last_round: reached_before_last_frame?)
+    @frames << (Game::Frame.new last: reached_before_last_frame?)
   end
 
   def reached_last_frame?

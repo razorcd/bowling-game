@@ -1,9 +1,9 @@
 class Game::Frame
   TOTAL_PINS = 10
 
-  def initialize last_round: false
+  def initialize last: false
     @allowed_trows = 2
-    @last_round = last_round
+    @last = last
     @score = []
     reset_up_pins
     @throws_count = 0
@@ -18,8 +18,8 @@ class Game::Frame
     @score << knocked_pins
     @throws_count += 1
 
-    allow_one_more_throw if (strike? || spare?) && @last_round
-    update_expected_extra_throws_count if over? && @last_round.!
+    allow_one_more_throw if (strike? || spare?) && @last
+    update_expected_extra_throws_count if over? && @last.!
   end
 
   def update_extra_score added_points:
