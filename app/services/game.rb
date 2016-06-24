@@ -1,9 +1,11 @@
 
 class Game
   TOTOAL_FRAMES_COUNT = 10
+  attr_reader :score
 
   def initialize
     @frames = [Game::Frame.new]
+    @score = 0
   end
 
   def throw! knocked_pins:
@@ -11,11 +13,9 @@ class Game
     @frames.last.throw! knocked_pins: knocked_pins
     update_old_frames_with knocked_pins
     start_new_frame if @frames.last.over? && reached_last_frame?.!
+    update_score
   end
 
-  def score  #memoize for realtime compatibility
-    @frames.map(&:score).inject(&:+)
-  end
 
   def game_over?
     reached_last_frame? && @frames.last.over?
@@ -28,6 +28,10 @@ private
     old_frames.each do |old_frame|
       old_frame.update_extra_score added_points: added_points
     end
+  end
+
+  def update_score
+    @score = @frames.map(&:score).inject(&:+)
   end
 
   def start_new_frame
