@@ -9,7 +9,7 @@ class Game < ActiveRecord::Base
   end
 
   def throw! knocked_pins:
-    raise(GameError, "This game is over") if game_over?
+    raise(GameError, "This game is over.") if game_over?
     frames << [] if frame_completed?(frames.last)
     raise(AvailablePinsError, "Can't knock more pins than available.") unless knocked_pins.between?(0, avaliable_pins)
     frames.last << knocked_pins
