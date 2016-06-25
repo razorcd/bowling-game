@@ -9,6 +9,11 @@ RSpec.describe Game, type: :model do
       expect(Game.new.frames).to eq []
     end
 
+    it "should have NUMBER_OF_PINS and NUMBER_OF_FRAMES" do
+      expect(Game::NUMBER_OF_PINS).to eq 10
+      expect(Game::NUMBER_OF_FRAMES).to eq 10
+    end
+
     it "should reload same data from DB" do
       current_game = Game.create
       expect(current_game.score).to eq 0
