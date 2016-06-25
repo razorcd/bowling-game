@@ -18,7 +18,11 @@ class GamesController < ApplicationController
   end
 
   def update
-    raise "missing knocked pins param" if params[:knocked_pins].nil?
+    if params[:knocked_pins].nil?
+      render json: {message: "The number of knocked pins is required."}, status: 500
+      return
+    end
+
     game.throw! knocked_pins: params[:knocked_pins].to_i
     render json: {}, status: 200
   rescue GameError => e
