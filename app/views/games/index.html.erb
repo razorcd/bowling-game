@@ -8,7 +8,8 @@
 
 <h3>Current game id: <span id="game-id"></span></h3>
 <h3>Current score: <span id="game-score"></span></h3>
-
+<h3>Frame number: <span id="game-frames"></span></h3>
+<h3>Game over: <span id="game-over"></span></h3>
 <br/>
 
 <form id="knocked-pins-form">
@@ -26,7 +27,7 @@
         .success(function(data){
           update_current_game_id(data.id);
           update_score();
-          update_error_message("");
+          clear_error_message();
           console.log("Success on requesting POST '/games'. Created game with id: " + data.id);
         })
         .error(function(data){
@@ -56,6 +57,8 @@
         .success(function(data){
           console.log("Success on requesting GET '/games/" + current_game_id);
           $("#game-score").text(data.score);
+          $("#game-frames").text(data.frame_number);
+          $("#game-over").text(data.game_over.toString());
         })
         .error(function(data){
           console.error("Error on requesting GET '/games/" + current_game_id);
@@ -65,25 +68,38 @@
 
     function send_knocked_pins(knocked_pins){
       $.ajax({
-        "url": "/games/"+current_game_id,
-        "type": "PUT",
-        "data": {"knocked_pins": knocked_pins}
-      })
-        .success(function(){
-          update_score();
-          update_error_message("");
-          console.log("Success on requesting PUT '/games/" + current_game_id + " with body: {knocked_pins: " + knocked_pins + "}");
-          $("#knocked-pins").val("");
-        })
-        .error(function(data){
-          update_error_message(data.responseJSON.message);
-          console.error("Error on requesting PUT '/games/" + current_game_id + " with body: {knocked_pins: " + knocked_pins + "}");
-          console.error(data);
-        })
+          "url": "/games/"+current_game_id,
+          "type": "PUT",
+          "data": {"knocked_pins": knocked_pins},
+          success: function (data, text) {
+            update_score();
+            clear_error_message();
+            console.log("Success on requesting PUT '/games/" + current_game_id + " with body: {knocked_pins: " + knocked_pins + "}");
+            $("#knocked-pins").val("");
+          },
+          error: function (request, status, error) {
+            try {
+              error_message = request.responseJSON.message;
+            }
+            catch(err) {
+              error_message = "";
+            }
+            finally {
+              update_error_message(error_message);
+              console.error("Error on requesting PUT '/games/" + current_game_id + " with body: {knocked_pins: " + knocked_pins + "}");
+              console.error(request);
+            }
+          }
+      });
     }
 
     function update_error_message(message){
+      if (!message) { message = "Server error." }
       $("#error-message").text(message);
+    }
+
+    function clear_error_message(){
+      $("#error-message").text("");
     }
   })
 </script>
