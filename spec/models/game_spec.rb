@@ -23,11 +23,11 @@ RSpec.describe Game, type: :model do
       game.throw! knocked_pins: 4
       game.throw! knocked_pins: 3
 
-      game.throw! knocked_pins: 5
-      expect(game.score).to eq 12
-      game.throw! knocked_pins: 2
+      game.throw! knocked_pins: 4
+      expect(game.score).to eq 11
+      game.throw! knocked_pins: 3
       expect(game.score).to eq 14
-      expect(game.frames).to eq [[4,3], [5,2]]
+      expect(game.frames).to eq [[4,3], [4,3]]
     end
 
     context "with a strike" do
@@ -68,11 +68,36 @@ RSpec.describe Game, type: :model do
       game.throw! knocked_pins: 5
       game.throw! knocked_pins: 3
       expect(game.score).to eq 80
-      expect(game.frames).to eq [[5,3],[5,3],[5,3],[5,3],[5,3],[5,3],[5,3],[5,3],[5,3],[5,3]]
+      expect(game.frames).to eq [[5,3]]*10
       expect(game.game_over?).to eq true
       expect { game.throw! knocked_pins: 3 }.to raise_error(GameError)
     end
 
+    it "should handle strike in last frame" do
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 82
+      expect(game.game_over?).to eq false
 
+      expect { game.throw! knocked_pins: 3 }.not_to raise_error
+      expect(game.score).to eq 85
+      expect(game.game_over?).to eq false
+
+      expect { game.throw! knocked_pins: 4 }.not_to raise_error
+      expect(game.score).to eq 89
+      expect(game.game_over?).to eq true
+      expect { game.throw! knocked_pins: 4 }.to raise_error(GameError)
+    end
+
+    it "should handle spare in last frame" do
+      game.throw! knocked_pins: 4
+      game.throw! knocked_pins: 6
+      expect(game.score).to eq 82
+      expect(game.game_over?).to eq false
+
+      expect { game.throw! knocked_pins: 3 }.not_to raise_error
+      expect(game.score).to eq 85
+      expect(game.game_over?).to eq true
+      expect { game.throw! knocked_pins: 4 }.to raise_error(GameError)
+    end
   end
 end

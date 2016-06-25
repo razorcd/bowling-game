@@ -19,18 +19,38 @@ class Game < ActiveRecord::Base
 
 private
 
+  def fill_older_open_frames_with value
+    frames.map do |frame|
+      next if frame.equal?(frames.last)
+      frame << value if strike?(frame) && frame.size <= 2 #strike
+      frame << value if spare?(frame) && frame.size == 2 #spare
+    end
+  end
+
   def frame_completed? frame
-    return true if (frame.nil? || frame.size==2 || frame[0]==10)
+    return ending_frame_completed?(frame) if ending_frame?(frame)
+    return true if frame.nil? || frame.size==2 || frame[0]==10
     false
   end
 
-  def fill_older_open_frames_with value
-    frames.map do |frame|
-      next if frame == frames.last
-      frame << value if frame[0]==10 && frame.size <= 2 #strike
-      frame << value if (frame[0]+frame[1])==10 && frame.size == 2 #spare
+  def ending_frame_completed? frame
+    if (strike?(frame) || spare?(frame))
+      frame.size==3
+    else
+      frame.size==2
     end
+  end
 
+  def strike? frame
+    frame[0] == 10
+  end
+
+  def spare? frame
+    [frame[0],frame[1]].compact.sum == 10
+  end
+
+  def ending_frame? frame
+    frames.size==10 && frames.last.equal?(frame)
   end
 end
 
