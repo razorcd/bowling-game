@@ -1,0 +1,77 @@
+<h1>Bowling Score</h1>
+
+<button id="new-game-but">New Game</button>
+
+<h3>Current game id: <span id="game-id"></span></h3>
+<h3>Current score: <span id="game-score"></span></h3>
+
+<br>
+
+<form id="knocked-pins-form">
+  <label for="knocked_pins">Knocked Pins:</label>
+  <input id="knocked-pins" type="text" name="knocked_pins">
+  <input type="submit" value="Send">
+</form>
+
+<script type="text/javascript">
+  $(function(){
+    current_game_id = null;
+
+    $("#new-game-but").on('click', function(){
+      $.post("/games", {})
+        .success(function(data){
+          update_current_game_id(data.id);
+          update_score();
+          console.log("Success on requesting POST '/games'. Created game with id: " + data.id);
+        })
+        .error(function(data){
+          console.error("Error on requesting POST '/games'.");
+          console.error(data);
+        })
+    })
+
+    $("#knocked-pins-form").on("submit", function(e){
+      e.preventDefault();
+      knocked_pins = $("#knocked-pins").val();
+      send_knocked_pins(knocked_pins);
+    })
+
+    setInterval(function(){
+      if (current_game_id) { update_score() }
+    }, 2000);
+
+
+    function update_current_game_id(id){
+      current_game_id = id;
+      $("#game-id").text(id);
+    }
+
+    function update_score(){
+      $.get("/games/" + current_game_id)
+        .success(function(data){
+          console.log("Success on requesting GET '/games/" + current_game_id);
+          $("#game-score").text(data.score);
+        })
+        .error(function(data){
+          console.error("Error on requesting GET '/games/" + current_game_id);
+          console.error(data);
+        })
+    }
+
+    function send_knocked_pins(knocked_pins){
+      $.ajax({
+        "url": "/games/"+current_game_id,
+        "type": "PUT",
+        "data": {"knocked_pins": knocked_pins}
+      })
+        .success(function(){
+          console.log("Success on requesting PUT '/games/" + current_game_id + " with body: {knocked_pins: " + knocked_pins + "}");
+          $("#knocked-pins").val("");
+        })
+        .error(function(data){
+          console.error("Error on requesting PUT '/games/" + current_game_id + " with body: {knocked_pins: " + knocked_pins + "}");
+          console.error(data);
+        })
+    }
+  })
+</script>
