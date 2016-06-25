@@ -33,13 +33,13 @@ RSpec.describe Game, type: :model do
   context "knocking only available pins" do
     context "on a normal frame" do
       it "should knock only available number of pins" do
-        expect { game.throw! knocked_pins: 11 }.to raise_error GameError
-        expect { game.throw! knocked_pins: -1 }.to raise_error GameError
+        expect { game.throw! knocked_pins: 11 }.to raise_error AvailablePinsError
+        expect { game.throw! knocked_pins: -1 }.to raise_error AvailablePinsError
       end
 
       it "should knock only available number of pins after a throw" do
         game.throw! knocked_pins: 7
-        expect { game.throw! knocked_pins: 4 }.to raise_error GameError
+        expect { game.throw! knocked_pins: 4 }.to raise_error AvailablePinsError
       end
     end
 
@@ -54,16 +54,16 @@ RSpec.describe Game, type: :model do
       it "should knock only available number of pins after a normal throw" do
         expect(game.score).to eq 72
         game.throw! knocked_pins: 3
-        expect { game.throw! knocked_pins: 8 }.to raise_error GameError
+        expect { game.throw! knocked_pins: 8 }.to raise_error AvailablePinsError
       end
 
       it "should knock only available number of pins after a strike" do
         expect(game.score).to eq 72
         game.throw! knocked_pins: 10
 
-        expect { game.throw! knocked_pins: 11 }.to raise_error GameError
+        expect { game.throw! knocked_pins: 11 }.to raise_error AvailablePinsError
         game.throw! knocked_pins: 5
-        expect { game.throw! knocked_pins: 6 }.to raise_error GameError
+        expect { game.throw! knocked_pins: 6 }.to raise_error AvailablePinsError
         game.throw! knocked_pins: 5
         expect(game.score).to eq 92
 
@@ -76,7 +76,7 @@ RSpec.describe Game, type: :model do
         game.throw! knocked_pins: 5
         game.throw! knocked_pins: 5
 
-        expect { game.throw! knocked_pins: 11 }.to raise_error GameError
+        expect { game.throw! knocked_pins: 11 }.to raise_error AvailablePinsError
         game.throw! knocked_pins: 5
         expect(game.score).to eq 87
 

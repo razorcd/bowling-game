@@ -11,7 +11,7 @@ class Game < ActiveRecord::Base
   def throw! knocked_pins:
     raise(GameError, "This game is over") if game_over?
     frames << [] if frame_completed?(frames.last)
-    raise(GameError, "Knocked pins can't be more then available pins") unless knocked_pins.between?(0, avaliable_pins)
+    raise(AvailablePinsError, "Can't knock more pins than available.") unless knocked_pins.between?(0, avaliable_pins)
     frames.last << knocked_pins
     fill_older_open_frames_with knocked_pins
     save!
@@ -31,20 +31,6 @@ private
     end
   end
 
-  def frame_completed? frame
-    return ending_frame_completed?(frame) if ending_frame?(frame)
-    return true if frame.nil? || frame.size==2 || strike?(frame)  ### =>
-    false
-  end
-
-  def ending_frame_completed? frame
-    if (strike?(frame) || spare?(frame))
-      frame.size==3
-    else
-      frame.size==2
-    end
-  end
-
   def strike? frame
     frame[0] == NUMBER_OF_PINS
   end
@@ -55,6 +41,20 @@ private
 
   def ending_frame? frame
     frames.size==NUMBER_OF_FRAMES && frames.last.equal?(frame)
+  end
+
+  def frame_completed? frame
+    return ending_frame_completed?(frame) if ending_frame?(frame)
+    return true if frame.nil? || frame.size==2 || strike?(frame)
+    false
+  end
+
+  def ending_frame_completed? frame
+    if (strike?(frame) || spare?(frame))
+      frame.size==3
+    else
+      frame.size==2
+    end
   end
 
   def avaliable_pins
@@ -68,4 +68,7 @@ private
 end
 
 class GameError < StandardError
+end
+
+class AvailablePinsError < StandardError
 end
