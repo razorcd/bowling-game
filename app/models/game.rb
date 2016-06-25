@@ -11,6 +11,7 @@ class Game < ActiveRecord::Base
   def throw! knocked_pins:
     raise(GameError, "This game is over") if game_over?
     frames << [] if frame_completed?(frames.last)
+    raise(GameError, "Knocked pins can't be more then available pins") unless knocked_pins.between?(0, avaliable_pins)
     frames.last << knocked_pins
     fill_older_open_frames_with knocked_pins
     save!
@@ -32,7 +33,7 @@ private
 
   def frame_completed? frame
     return ending_frame_completed?(frame) if ending_frame?(frame)
-    return true if frame.nil? || frame.size==2 || strike?(frame)
+    return true if frame.nil? || frame.size==2 || strike?(frame)  ### =>
     false
   end
 
@@ -54,6 +55,15 @@ private
 
   def ending_frame? frame
     frames.size==NUMBER_OF_FRAMES && frames.last.equal?(frame)
+  end
+
+  def avaliable_pins
+    current_frame = frames.last
+    current_frame_score = current_frame.to_a.sum
+    if ending_frame?(current_frame)
+      return (NUMBER_OF_PINS*2 - current_frame_score) if strike?(current_frame) || spare?(current_frame)
+    end
+    NUMBER_OF_PINS - current_frame_score
   end
 end
 

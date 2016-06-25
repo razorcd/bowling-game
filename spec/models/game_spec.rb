@@ -30,6 +30,61 @@ RSpec.describe Game, type: :model do
     end
   end
 
+  context "knocking only available pins" do
+    context "on a normal frame" do
+      it "should knock only available number of pins" do
+        expect { game.throw! knocked_pins: 11 }.to raise_error GameError
+        expect { game.throw! knocked_pins: -1 }.to raise_error GameError
+      end
+
+      it "should knock only available number of pins after a throw" do
+        game.throw! knocked_pins: 7
+        expect { game.throw! knocked_pins: 4 }.to raise_error GameError
+      end
+    end
+
+    context "on an ending frame" do
+      before :each do
+        (10-1).times do
+          game.throw! knocked_pins: 3
+          game.throw! knocked_pins: 5
+        end
+      end
+
+      it "should knock only available number of pins after a normal throw" do
+        expect(game.score).to eq 72
+        game.throw! knocked_pins: 3
+        expect { game.throw! knocked_pins: 8 }.to raise_error GameError
+      end
+
+      it "should knock only available number of pins after a strike" do
+        expect(game.score).to eq 72
+        game.throw! knocked_pins: 10
+
+        expect { game.throw! knocked_pins: 11 }.to raise_error GameError
+        game.throw! knocked_pins: 5
+        expect { game.throw! knocked_pins: 6 }.to raise_error GameError
+        game.throw! knocked_pins: 5
+        expect(game.score).to eq 92
+
+        expect { game.throw! knocked_pins: 1 }.to raise_error GameError
+      end
+
+
+      it "should knock only available number of pins after a spare" do
+        expect(game.score).to eq 72
+        game.throw! knocked_pins: 5
+        game.throw! knocked_pins: 5
+
+        expect { game.throw! knocked_pins: 11 }.to raise_error GameError
+        game.throw! knocked_pins: 5
+        expect(game.score).to eq 87
+
+        expect { game.throw! knocked_pins: 1 }.to raise_error GameError
+      end
+    end
+  end
+
   context "one frame" do
     it "should show correct score" do
       game.throw! knocked_pins: 4
