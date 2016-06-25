@@ -181,6 +181,21 @@ RSpec.describe Game, type: :model do
       expect(game.frames).to eq([[5,3]]*9 << [4,6,3])
       expect { game.throw! knocked_pins: 4 }.to raise_error(GameError)
     end
+
+    it "should allow 3 strikes in last frame" do
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 82
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 92
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 102
+      expect(game.game_over?).to eq true
+      expect(game.frames).to eq([[5,3]]*9 << [10,10,10])
+    end
   end
 
   context "different test cases" do

@@ -37,6 +37,10 @@ private
     frame[0] == NUMBER_OF_PINS
   end
 
+  def double_strike? frame
+    frame[0] == NUMBER_OF_PINS && frame[1] == NUMBER_OF_PINS
+  end
+
   def spare? frame
     [frame[0],frame[1]].compact.sum == NUMBER_OF_PINS
   end
@@ -63,6 +67,7 @@ private
     current_frame = frames.last
     current_frame_score = current_frame.to_a.sum
     if ending_frame?(current_frame)
+      return (NUMBER_OF_PINS*3 - current_frame_score) if double_strike?(current_frame)
       return (NUMBER_OF_PINS*2 - current_frame_score) if strike?(current_frame) || spare?(current_frame)
     end
     NUMBER_OF_PINS - current_frame_score

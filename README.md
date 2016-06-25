@@ -9,7 +9,7 @@ Rules: https://en.wikipedia.org/wiki/Ten-pin_bowling
 
 ##TODO
 
-- [ ] investigate 2 strikes on last grame
+- [x] investigate 2 strikes on last grame
 - [ ] handle required `params`
 - [ ] update status code to be more expressive
 - [ ] replace `.to_i` everywhere. `"s".to_i == 0` in ruby
