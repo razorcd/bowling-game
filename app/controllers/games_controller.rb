@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   skip_before_action :verify_authenticity_token  #disables CSRF token
 
   def create
-    render json: {game_id: new_game.id}, status: 200
+    render json: {id: new_game.id}, status: 200
   end
 
   def show
