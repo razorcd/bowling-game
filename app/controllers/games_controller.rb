@@ -23,6 +23,11 @@ class GamesController < ApplicationController
       return
     end
 
+    unless game
+      render json: {message: "Game not found."}, status: 500
+      return
+    end
+
     game.throw! knocked_pins: params[:knocked_pins].to_i
     render json: {}, status: 200
   rescue GameError => e
@@ -38,6 +43,6 @@ private
   end
 
   def game
-    @game ||= Game.find(params[:id].to_i)
+    @game ||= Game.find_by(id: params[:id])
   end
 end
