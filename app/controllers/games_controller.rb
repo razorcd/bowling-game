@@ -18,18 +18,13 @@ class GamesController < ApplicationController
   end
 
   def update
-    if params[:knocked_pins].nil?
-      render json: {message: "The number of knocked pins is required."}, status: 500
-      return
-    end
-
-    unless game
+    if game
+      game.throw! knocked_pins: update_params[:knocked_pins].to_i
+      render json: {}, status: 200
+    else
       render json: {message: "Game not found."}, status: 500
-      return
     end
 
-    game.throw! knocked_pins: params[:knocked_pins].to_i
-    render json: {}, status: 200
   rescue GameError => e
     render json: {message: e.message}, status: 500
   rescue AvailablePinsError => e
@@ -44,5 +39,11 @@ private
 
   def game
     @game ||= Game.find_by(id: params[:id])
+  end
+
+  def update_params
+    raise(ActionController::ParameterMissing, "Wrong knocked pins data format.") if params[:knocked_pins].to_s.chars.any? {|c| c=~/[^\d]/}
+    params.require(:knocked_pins)
+    params.permit(:knocked_pins)
   end
 end

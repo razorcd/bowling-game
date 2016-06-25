@@ -28,8 +28,8 @@ RSpec.describe Game, type: :model do
 
       expect(game1.score).to eq 4
       expect(game2.score).to eq 6
-      expect(game1.frames).to eq [[1,3]]
-      expect(game2.frames).to eq [[2,4]]
+      expect(game1.frames).to eq [[1,3], []]
+      expect(game2.frames).to eq [[2,4], []]
     end
   end
 
@@ -94,7 +94,7 @@ RSpec.describe Game, type: :model do
       expect(game.score).to eq 4
       game.throw! knocked_pins: 3
       expect(game.score).to eq 7
-      expect(game.frames).to eq [[4,3]]
+      expect(game.frames).to eq [[4,3], []]
     end
   end
 
@@ -107,7 +107,7 @@ RSpec.describe Game, type: :model do
       expect(game.score).to eq 11
       game.throw! knocked_pins: 3
       expect(game.score).to eq 14
-      expect(game.frames).to eq [[4,3], [4,3]]
+      expect(game.frames).to eq [[4,3], [4,3], []]
     end
 
     context "with a strike" do
@@ -118,7 +118,7 @@ RSpec.describe Game, type: :model do
         game.throw! knocked_pins: 5
         game.throw! knocked_pins: 3
         expect(game.score).to eq 26
-        expect(game.frames).to eq [[10, 5, 3], [5,3]]
+        expect(game.frames).to eq [[10, 5, 3], [5,3], []]
       end
     end
 
@@ -131,7 +131,7 @@ RSpec.describe Game, type: :model do
         game.throw! knocked_pins: 5
         game.throw! knocked_pins: 3
         expect(game.score).to eq 23
-        expect(game.frames).to eq [[4, 6, 5], [5,3]]
+        expect(game.frames).to eq [[4, 6, 5], [5,3], []]
       end
     end
   end

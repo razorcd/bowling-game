@@ -47,5 +47,22 @@ RSpec.describe "Games", type: :request do
       expect(response).to have_http_status(500)
       expect(JSON.parse response.body).to eq({"message"=> "This game is over."})
     end
+
+    context " on missing required params" do
+      it "should raise error when required param is missing" do
+        new_game = Game.create
+        expect { put game_path(new_game.id.to_s) }.to raise_error ActionController::ParameterMissing
+      end
+
+      it "should raise error when required param is blank" do
+        new_game = Game.create
+        expect { put game_path(new_game.id.to_s, "knocked_pins" => "") }.to raise_error ActionController::ParameterMissing
+      end
+
+      it "should raise error when required param is not a number" do
+        new_game = Game.create
+        expect { put game_path(new_game.id.to_s, "knocked_pins" => "4de5") }.to raise_error ActionController::ParameterMissing
+      end
+    end
   end
 end
