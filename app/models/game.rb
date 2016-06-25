@@ -6,9 +6,11 @@ class Game < ActiveRecord::Base
 
   before_save do
     self.score = frames.flatten.sum
+    self.frames = [[]] if frames.empty?
   end
 
   def throw! knocked_pins:
+    #lock DB row
     raise(GameError, "This game is over.") if game_over?
     frames << [] if frame_completed?(frames.last)
     raise(AvailablePinsError, "Can't knock more pins than available.") unless knocked_pins.between?(0, avaliable_pins)

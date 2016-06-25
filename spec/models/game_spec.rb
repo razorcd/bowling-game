@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe Game, type: :model do
-  let(:game) { Game.new }
+  let(:game) { Game.create }
 
   context "model from db" do
     it "should have initial score and frames" do
-      expect(Game.new.score).to eq 0
-      expect(Game.new.frames).to eq []
+      expect(Game.create.score).to eq 0
+      expect(Game.create.frames).to eq [[]]
     end
 
     it "should have NUMBER_OF_PINS and NUMBER_OF_FRAMES" do
@@ -17,16 +17,19 @@ RSpec.describe Game, type: :model do
     it "should reload same data from DB" do
       current_game = Game.create
       expect(current_game.score).to eq 0
-      expect(current_game.frames).to eq []
+      expect(current_game.frames).to eq [[]]
 
       game1 = Game.find(current_game.id)
-      game1.throw! knocked_pins: 4
-      expect(game1.score).to eq 4
-
       game2 = Game.find(current_game.id)
-      game2.throw! knocked_pins: 3
-      expect(game2.score).to eq 7
-      expect(game2.frames).to eq [[4,3]]
+      game1.throw! knocked_pins: 1
+      game2.throw! knocked_pins: 2
+      game1.throw! knocked_pins: 3
+      game2.throw! knocked_pins: 4
+
+      expect(game1.score).to eq 4
+      expect(game2.score).to eq 6
+      expect(game1.frames).to eq [[1,3]]
+      expect(game2.frames).to eq [[2,4]]
     end
   end
 

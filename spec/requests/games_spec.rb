@@ -14,7 +14,7 @@ RSpec.describe "Games", type: :request do
       new_game = Game.create
       get game_path(new_game.id.to_s)
       expect(response).to have_http_status(200)
-      expect(JSON.parse response.body).to eq({"score" => 0})
+      expect(JSON.parse response.body).to eq({"score" => 0, "frame_number" => 1, "game_over" => false})
     end
   end
 
@@ -24,6 +24,7 @@ RSpec.describe "Games", type: :request do
       put game_path(new_game.id.to_s, "knocked_pins" => "5")
       expect(response).to have_http_status(200)
       expect(Game.find(new_game.id).score).to eq 5
+      expect(Game.find(new_game.id).frames).to eq [[5]]
     end
 
     it "should return error message when knocking too many pins" do
@@ -40,6 +41,7 @@ RSpec.describe "Games", type: :request do
         put game_path(new_game.id.to_s, "knocked_pins" => "4")
         put game_path(new_game.id.to_s, "knocked_pins" => "4")
       end
+      expect(Game.find(new_game.id).frames).to eq([[4,4]]*10)
 
       put game_path(new_game.id.to_s, "knocked_pins" => "4")
       expect(response).to have_http_status(500)

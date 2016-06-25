@@ -9,10 +9,16 @@ class GamesController < ApplicationController
   end
 
   def show
-    render json: {score: game.score}, status: 200
+    game_hash = {
+      score: game.score,
+      frame_number: game.frames.count,
+      game_over: game.game_over?,
+    }
+    render json: game_hash, status: 200
   end
 
   def update
+    raise "missing knocked pins param" if params[:knocked_pins].nil?
     game.throw! knocked_pins: params[:knocked_pins].to_i
     render json: {}, status: 200
   rescue GameError => e
