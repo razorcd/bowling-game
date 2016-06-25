@@ -25,9 +25,7 @@ class GamesController < ApplicationController
       render json: {message: "Game not found."}, status: 500
     end
 
-  rescue GameError => e
-    render json: {message: e.message}, status: 500
-  rescue AvailablePinsError => e
+  rescue GameError, AvailablePinsError => e
     render json: {message: e.message}, status: 500
   end
 
