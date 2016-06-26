@@ -8,7 +8,6 @@ class Api::GamesController < ApplicationController
   def show
     game_hash = {
       score: game.score,
-      frame_number: game.frames.count,
       score_by_frame: game.frames,
       game_over: game.game_over?,
     }
