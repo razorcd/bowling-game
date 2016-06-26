@@ -22,7 +22,5 @@ module BowlingGame
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
-
-    Dir.mkdir './tmp/cache/' unless Dir.exists? './tmp/cache/' #used for default Rails caching
   end
 end
