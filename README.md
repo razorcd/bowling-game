@@ -33,4 +33,4 @@ Read the [API documentation](https://github.com/razorcd/bowling-game/blob/master
 - [x] add CI (with Travis)
 - [x] deploy to Heroku
 - [ ] disable assets and compilation
-- [ ] ensure default json content type
+- [x] add `/api` route namespacing and ensure default `json content-type`
