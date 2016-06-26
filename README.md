@@ -4,9 +4,12 @@
 
 Rules: https://en.wikipedia.org/wiki/Ten-pin_bowling
 
+
 Start the server and call the REST JSON API or try the rough SPA demo at `http://localhost:3000/demo`
 
 Read the [API documentation](https://github.com/razorcd/bowling-game/blob/master/API_doc.md) for endpoints details.
+
+[LIVE DEMO](http://bowling-game-demo.herokuapp.com/demo)
 
 ##Development
 
@@ -28,6 +31,6 @@ Read the [API documentation](https://github.com/razorcd/bowling-game/blob/master
 - [x] add API docs
 - [x] add license
 - [x] add CI (with Travis)
-- [ ] deploy to Heroku
+- [x] deploy to Heroku
 - [ ] disable assets and compilation
 - [ ] ensure default json content type
