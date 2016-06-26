@@ -21,4 +21,4 @@ Read the [API documentation](https://github.com/razorcd/bowling-game/blob/master
 - [X] lock DB row while updating so API is thread safe / multiprocess safe
 - [x] move GamesController#index and cleanup view
 - [x] add API docs
-- [ ] add license
+- [x] add license
