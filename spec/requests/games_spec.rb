@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe "Games", type: :request do
+  before(:each) { Rails.cache.clear }
+
   describe "POST /api/games" do
     it "should create a game" do
       post api_games_path
@@ -10,9 +12,21 @@ RSpec.describe "Games", type: :request do
   end
 
   describe "GET /api/games/:id" do
+    let(:game) { Game.create }
+
     it "should show the score" do
-      new_game = Game.create
-      get api_game_path(new_game.id.to_s)
+      expect(Game).to receive(:find_by).and_call_original
+      get api_game_path(game.id.to_s)
+      expect(response).to have_http_status(200)
+      expect(JSON.parse response.body).to eq({"score" => 0, "frame_number" => 1, "game_over" => false})
+    end
+
+    it "should cache the response" do
+      expect(Game).to receive(:find_by_id).and_call_original
+      get api_game_path(game.id.to_s) #creates cache
+
+      expect(Game).not_to receive(:find_by_id).and_call_original
+      get api_game_path(game.id.to_s)
       expect(response).to have_http_status(200)
       expect(JSON.parse response.body).to eq({"score" => 0, "frame_number" => 1, "game_over" => false})
     end

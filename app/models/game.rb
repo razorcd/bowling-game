@@ -7,7 +7,10 @@ class Game < ActiveRecord::Base
   before_save do
     self.score = frames.flatten.sum
     self.frames = [[]] if frames.empty?
+    self.remove_from_cache
   end
+
+  include CachedFindById
 
   def throw! knocked_pins:
     self.transaction do

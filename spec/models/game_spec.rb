@@ -3,6 +3,8 @@ require 'rails_helper'
 RSpec.describe Game, type: :model do
   let(:game) { Game.create }
 
+  before(:each) { Rails.cache.clear }
+
   context "model from db" do
     it "should have initial score and frames" do
       expect(Game.create.score).to eq 0
@@ -30,6 +32,15 @@ RSpec.describe Game, type: :model do
       game2.throw! knocked_pins: 4
       expect(game2.score).to eq 10
       expect(game2.frames).to eq [[1,3],[2,4], []]
+    end
+
+    it "should cache find_by_id" do
+      game
+      expect(Game).to receive(:find_by_id).and_call_original
+      Game.cached_find_by_id game.id
+
+      expect(Game).not_to receive(:find_by_id).and_call_original
+      Game.cached_find_by_id game.id
     end
   end
 

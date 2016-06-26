@@ -33,7 +33,7 @@ private
   end
 
   def game
-    @game ||= Game.find_by(id: params[:id])
+    @game ||= Game.cached_find_by_id(params[:id])
   end
 
   def update_params
