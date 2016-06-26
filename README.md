@@ -39,3 +39,4 @@ Read the [API documentation](https://github.com/razorcd/bowling-game/blob/master
 - [x] add `/api` route namespacing and ensure default `json content-type`
 - [ ] add app semantic versioning including api versioning (e.g. `/api/v1`)
 - [x] cache `GamesController#show`. Added casched method `Game.cached_find_by_id` to cache accessed game records
+- [ ] add in memory caching and separate cache location by environment
