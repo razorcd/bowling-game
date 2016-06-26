@@ -10,13 +10,15 @@ class Game < ActiveRecord::Base
   end
 
   def throw! knocked_pins:
-    #lock DB row
-    raise(GameError, "This game is over.") if game_over?
-    raise(AvailablePinsError, "Can't knock more pins than available.") unless knocked_pins.between?(0, avaliable_pins)
-    frames.last << knocked_pins
-    fill_older_open_frames_with knocked_pins
-    frames << [] if frame_completed?(frames.last) && game_over?.!
-    save!
+    self.transaction do
+      self.lock!
+      raise(GameError, "This game is over.") if game_over?
+      raise(AvailablePinsError, "Can't knock more pins than available.") unless knocked_pins.between?(0, avaliable_pins)
+      frames.last << knocked_pins
+      fill_older_open_frames_with knocked_pins
+      frames << [] if frame_completed?(frames.last) && game_over?.!
+      save!
+    end
   end
 
   def game_over?

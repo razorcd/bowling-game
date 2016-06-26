@@ -20,16 +20,16 @@ RSpec.describe Game, type: :model do
       expect(current_game.frames).to eq [[]]
 
       game1 = Game.find(current_game.id)
-      game2 = Game.find(current_game.id)
       game1.throw! knocked_pins: 1
-      game2.throw! knocked_pins: 2
       game1.throw! knocked_pins: 3
-      game2.throw! knocked_pins: 4
-
       expect(game1.score).to eq 4
-      expect(game2.score).to eq 6
       expect(game1.frames).to eq [[1,3], []]
-      expect(game2.frames).to eq [[2,4], []]
+
+      game2 = Game.find(current_game.id)
+      game2.throw! knocked_pins: 2
+      game2.throw! knocked_pins: 4
+      expect(game2.score).to eq 10
+      expect(game2.frames).to eq [[1,3],[2,4], []]
     end
   end
 
