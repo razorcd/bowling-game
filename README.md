@@ -15,3 +15,5 @@ Rules: https://en.wikipedia.org/wiki/Ten-pin_bowling
 - [X] replace `.to_i` in controller because `"s".to_i == 0` in ruby. (Now `update_params` checks for non digits)
 - [X] lock DB row while updating so API is thread safe / multiprocess safe
 - [x] move GamesController#index and cleanup view
+- [ ] add API docs
+- [ ] add license
