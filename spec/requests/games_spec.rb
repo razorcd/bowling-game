@@ -14,11 +14,11 @@ RSpec.describe "Games", type: :request do
   describe "GET /api/games/:id" do
     let(:game) { Game.create }
 
-    it "should show the score" do
+    it "should show the game details" do
       expect(Game).to receive(:find_by).and_call_original
       get api_game_path(game.id.to_s)
       expect(response).to have_http_status(200)
-      expect(JSON.parse response.body).to eq({"score" => 0, "frame_number" => 1, "game_over" => false})
+      expect(JSON.parse response.body).to eq({"score" => 0, "score_by_frame" => [[]], "game_over" => false})
     end
 
     it "should cache the response" do
@@ -28,7 +28,7 @@ RSpec.describe "Games", type: :request do
       expect(Game).not_to receive(:find_by_id).and_call_original
       get api_game_path(game.id.to_s)
       expect(response).to have_http_status(200)
-      expect(JSON.parse response.body).to eq({"score" => 0, "frame_number" => 1, "game_over" => false})
+      expect(JSON.parse response.body).to eq({"score" => 0, "score_by_frame" => [[]], "game_over" => false})
     end
   end
 

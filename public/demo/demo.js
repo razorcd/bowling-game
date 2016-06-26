@@ -37,7 +37,8 @@ $(function(){
       .success(function(data){
         console.log("Success on requesting GET '"+ api_url_path + current_game_id + "'");
         $("#game-score").text(data.score);
-        $("#game-frames").text(data.frame_number);
+        $("#game-frames").text(data.score_by_frame.length);
+        $("#game-score-by-frame").text(JSON.stringify(data.score_by_frame));
         $("#game-over").text(data.game_over.toString());
       })
       .error(function(data){
