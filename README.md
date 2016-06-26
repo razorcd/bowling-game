@@ -26,3 +26,4 @@ Read the [API documentation](https://github.com/razorcd/bowling-game/blob/master
 - [x] add license
 - [x] add CI (with Travis)
 - [ ] deploy to Heroku
+- [ ] disable assets and compilation 
