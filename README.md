@@ -15,12 +15,15 @@ Read the [API documentation](https://github.com/razorcd/bowling-game/blob/master
 
 ##TODO
 
+- [x] implement game logic using TDD (test first)
+- [x] persist it's state to handle stateless requests
+- [x] add integration tests
 - [x] add REST Endpoints for `Game` on `create`, `show`, `update`
 - [x] investigate 2 strikes on last grame
 - [x] handle required `params`
-- [X] update status code to be more expressive
-- [X] replace `.to_i` in controller because `"s".to_i == 0` in ruby. (Now `update_params` checks for non digits)
-- [X] lock DB row while updating so API is thread safe / multiprocess safe
+- [x] update status code to be more expressive
+- [x] replace `.to_i` in controller because `"s".to_i == 0` in ruby. (Now `update_params` checks for non digits)
+- [x] lock DB row while updating so API is thread safe / multiprocess safe
 - [x] move GamesController#index and cleanup view
 - [x] add API docs
 - [x] add license
