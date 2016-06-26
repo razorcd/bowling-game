@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/razorcd/bowling-game.svg?branch=master)](https://travis-ci.org/razorcd/bowling-game)
+
 #Bowling Game Score Board API
 
 Rules: https://en.wikipedia.org/wiki/Ten-pin_bowling
