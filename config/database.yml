@@ -22,4 +22,9 @@ test:
 
 production:
   <<: *default
-  database: db/production.sqlite3
+  adapter: postgresql
+  encoding: unicode
+  database: bowling_game_prod
+  pool: 5
+  username: bowling_game
+  password: ENV['bowling_game_password']

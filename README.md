@@ -22,3 +22,5 @@ Read the [API documentation](https://github.com/razorcd/bowling-game/blob/master
 - [x] move GamesController#index and cleanup view
 - [x] add API docs
 - [x] add license
+- [x] add CI (with Travis)
+- [ ] deploy to Heroku
