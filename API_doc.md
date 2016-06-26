@@ -9,7 +9,8 @@ response:
 ``` json
 {
   "score": 42,
-  "frame_number": 2,
+  "frame_number": 4,
+  "score_by_frame":[[4,4],[4,1],[7,3,2],[2]]
   "game_over": false
 }
 ```
