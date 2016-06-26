@@ -21,10 +21,7 @@ test:
   database: db/test.sqlite3
 
 production:
-  <<: *default
-  adapter: postgresql
   encoding: unicode
-  database: bowling_game_prod
   pool: 5
-  username: bowling_game
-  password: ENV['bowling_game_password']
+  url: <%= ENV['DATABASE_URL'] %>
+
