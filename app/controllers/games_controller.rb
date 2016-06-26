@@ -2,7 +2,7 @@ class GamesController < ApplicationController
   skip_before_action :verify_authenticity_token  #disables CSRF token
 
   def create
-    render json: {id: new_game.id}, status: 200
+    render json: {id: new_game.id}, status: 201
   end
 
   def show
@@ -17,13 +17,13 @@ class GamesController < ApplicationController
   def update
     if game
       game.throw! knocked_pins: update_params[:knocked_pins].to_i
-      render json: {}, status: 200
+      render json: {}, status: 204
     else
-      render json: {message: "Game not found."}, status: 500
+      render json: {message: "Game not found."}, status: 404
     end
 
   rescue GameError, AvailablePinsError => e
-    render json: {message: e.message}, status: 500
+    render json: {message: e.message}, status: 422
   end
 
 private
