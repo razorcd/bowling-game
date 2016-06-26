@@ -2,8 +2,11 @@
 
 #Bowling Game Score Board API
 
-Rules: https://en.wikipedia.org/wiki/Ten-pin_bowling
+Rules: 
 
+    - https://en.wikipedia.org/wiki/Ten-pin_bowling
+    
+    - https://www.youtube.com/watch?v=aBe71sD8o8c
 
 Start the server and call the REST JSON API or try the rough SPA demo at `http://localhost:3000/demo`
 
@@ -26,7 +29,7 @@ Read the [API documentation](https://github.com/razorcd/bowling-game/blob/master
 - [x] handle required `params`
 - [x] update status code to be more expressive
 - [x] replace `.to_i` in controller because `"s".to_i == 0` in ruby. (Now `update_params` checks for non digits)
-- [x] lock DB row while updating so API is thread safe / multiprocess safe
+- [x] pessimistic locking on DB row while updating so API is thread safe / multiprocess safe
 - [x] move GamesController#index and cleanup view
 - [x] add API docs
 - [x] add license
@@ -34,3 +37,6 @@ Read the [API documentation](https://github.com/razorcd/bowling-game/blob/master
 - [x] deploy to Heroku
 - [ ] disable assets and compilation
 - [x] add `/api` route namespacing and ensure default `json content-type`
+- [ ] add app semantic versioning including api versioning (e.g. `/api/v1`)
+- [x] cache `GamesController#show`. Added casched method `Game.cached_find_by_id` to cache accessed game records
+- [ ] add in memory caching and separate cache location by environment
