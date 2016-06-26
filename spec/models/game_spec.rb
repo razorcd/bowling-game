@@ -1,12 +1,12 @@
 require 'rails_helper'
 
 RSpec.describe Game, type: :model do
-  let(:game) { Game.new }
+  let(:game) { Game.create }
 
   context "model from db" do
     it "should have initial score and frames" do
-      expect(Game.new.score).to eq 0
-      expect(Game.new.frames).to eq []
+      expect(Game.create.score).to eq 0
+      expect(Game.create.frames).to eq [[]]
     end
 
     it "should have NUMBER_OF_PINS and NUMBER_OF_FRAMES" do
@@ -17,16 +17,74 @@ RSpec.describe Game, type: :model do
     it "should reload same data from DB" do
       current_game = Game.create
       expect(current_game.score).to eq 0
-      expect(current_game.frames).to eq []
+      expect(current_game.frames).to eq [[]]
 
       game1 = Game.find(current_game.id)
-      game1.throw! knocked_pins: 4
+      game1.throw! knocked_pins: 1
+      game1.throw! knocked_pins: 3
       expect(game1.score).to eq 4
+      expect(game1.frames).to eq [[1,3], []]
 
       game2 = Game.find(current_game.id)
-      game2.throw! knocked_pins: 3
-      expect(game2.score).to eq 7
-      expect(game2.frames).to eq [[4,3]]
+      game2.throw! knocked_pins: 2
+      game2.throw! knocked_pins: 4
+      expect(game2.score).to eq 10
+      expect(game2.frames).to eq [[1,3],[2,4], []]
+    end
+  end
+
+  context "knocking only available pins" do
+    context "on a normal frame" do
+      it "should knock only available number of pins" do
+        expect { game.throw! knocked_pins: 11 }.to raise_error AvailablePinsError
+        expect { game.throw! knocked_pins: -1 }.to raise_error AvailablePinsError
+      end
+
+      it "should knock only available number of pins after a throw" do
+        game.throw! knocked_pins: 7
+        expect { game.throw! knocked_pins: 4 }.to raise_error AvailablePinsError
+      end
+    end
+
+    context "on an ending frame" do
+      before :each do
+        (10-1).times do
+          game.throw! knocked_pins: 3
+          game.throw! knocked_pins: 5
+        end
+      end
+
+      it "should knock only available number of pins after a normal throw" do
+        expect(game.score).to eq 72
+        game.throw! knocked_pins: 3
+        expect { game.throw! knocked_pins: 8 }.to raise_error AvailablePinsError
+      end
+
+      it "should knock only available number of pins after a strike" do
+        expect(game.score).to eq 72
+        game.throw! knocked_pins: 10
+
+        expect { game.throw! knocked_pins: 11 }.to raise_error AvailablePinsError
+        game.throw! knocked_pins: 5
+        expect { game.throw! knocked_pins: 6 }.to raise_error AvailablePinsError
+        game.throw! knocked_pins: 5
+        expect(game.score).to eq 92
+
+        expect { game.throw! knocked_pins: 1 }.to raise_error GameError
+      end
+
+
+      it "should knock only available number of pins after a spare" do
+        expect(game.score).to eq 72
+        game.throw! knocked_pins: 5
+        game.throw! knocked_pins: 5
+
+        expect { game.throw! knocked_pins: 11 }.to raise_error AvailablePinsError
+        game.throw! knocked_pins: 5
+        expect(game.score).to eq 87
+
+        expect { game.throw! knocked_pins: 1 }.to raise_error GameError
+      end
     end
   end
 
@@ -36,7 +94,7 @@ RSpec.describe Game, type: :model do
       expect(game.score).to eq 4
       game.throw! knocked_pins: 3
       expect(game.score).to eq 7
-      expect(game.frames).to eq [[4,3]]
+      expect(game.frames).to eq [[4,3], []]
     end
   end
 
@@ -49,7 +107,7 @@ RSpec.describe Game, type: :model do
       expect(game.score).to eq 11
       game.throw! knocked_pins: 3
       expect(game.score).to eq 14
-      expect(game.frames).to eq [[4,3], [4,3]]
+      expect(game.frames).to eq [[4,3], [4,3], []]
     end
 
     context "with a strike" do
@@ -60,7 +118,7 @@ RSpec.describe Game, type: :model do
         game.throw! knocked_pins: 5
         game.throw! knocked_pins: 3
         expect(game.score).to eq 26
-        expect(game.frames).to eq [[10, 5, 3], [5,3]]
+        expect(game.frames).to eq [[10, 5, 3], [5,3], []]
       end
     end
 
@@ -73,7 +131,7 @@ RSpec.describe Game, type: :model do
         game.throw! knocked_pins: 5
         game.throw! knocked_pins: 3
         expect(game.score).to eq 23
-        expect(game.frames).to eq [[4, 6, 5], [5,3]]
+        expect(game.frames).to eq [[4, 6, 5], [5,3], []]
       end
     end
   end
@@ -122,6 +180,21 @@ RSpec.describe Game, type: :model do
       expect(game.game_over?).to eq true
       expect(game.frames).to eq([[5,3]]*9 << [4,6,3])
       expect { game.throw! knocked_pins: 4 }.to raise_error(GameError)
+    end
+
+    it "should allow 3 strikes in last frame" do
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 82
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 92
+      expect(game.game_over?).to eq false
+
+      game.throw! knocked_pins: 10
+      expect(game.score).to eq 102
+      expect(game.game_over?).to eq true
+      expect(game.frames).to eq([[5,3]]*9 << [10,10,10])
     end
   end
 
