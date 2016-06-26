@@ -1,6 +1,6 @@
 #API documentation for Bowling Game Score Board
 
-- GET `/games/:id`
+- GET `/api/games/:id`
 
 Will show details of `Game` with specified `id`
 
@@ -15,7 +15,7 @@ response:
 ```
 
 
-- POST `/games`
+- POST `/api/games`
 
 Will create a new game and return it's `id`
 
@@ -28,7 +28,7 @@ response:
 ```
 
 
-- PUT/PATCH `/games/:id`
+- PUT/PATCH `/api/games/:id`
     + body: `{ "knocked_pins": 4 }`
 
 Will add the knocked down pins to the score and update the db record.

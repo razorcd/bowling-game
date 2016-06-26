@@ -1,16 +1,17 @@
 $(function(){
+  api_url_path = "/api/games/"
   current_game_id = null;
 
   $("#new-game-but").on('click', function(){
-    $.post("/games", {})
+    $.post(api_url_path, {})
       .success(function(data){
         update_current_game_id(data.id);
         update_score();
         clear_error_message();
-        console.log("Success on requesting POST '/games'. Created game with id: " + data.id);
+        console.log("Success on requesting POST '"+ api_url_path + "'. Created game with id: " + data.id);
       })
       .error(function(data){
-        console.error("Error on requesting POST '/games'.");
+        console.error("Error on requesting POST '"+ api_url_path + "'.");
         console.error(data);
       })
   })
@@ -32,28 +33,28 @@ $(function(){
   }
 
   function update_score(){
-    $.get("/games/" + current_game_id)
+    $.get(api_url_path + current_game_id)
       .success(function(data){
-        console.log("Success on requesting GET '/games/" + current_game_id);
+        console.log("Success on requesting GET '"+ api_url_path + current_game_id + "'");
         $("#game-score").text(data.score);
         $("#game-frames").text(data.frame_number);
         $("#game-over").text(data.game_over.toString());
       })
       .error(function(data){
-        console.error("Error on requesting GET '/games/" + current_game_id);
+        console.error("Error on requesting GET '"+ api_url_path + current_game_id);
         console.error(data);
       })
   }
 
   function send_knocked_pins(knocked_pins){
     $.ajax({
-        "url": "/games/"+current_game_id,
+        "url": api_url_path + current_game_id,
         "type": "PUT",
         "data": {"knocked_pins": knocked_pins},
         success: function (data, text) {
           update_score();
           clear_error_message();
-          console.log("Success on requesting PUT '/games/" + current_game_id + " with body: {knocked_pins: " + knocked_pins + "}");
+          console.log("Success on requesting PUT '"+ api_url_path + current_game_id + "' with body: {knocked_pins: " + knocked_pins + "}");
           $("#knocked-pins").val("");
         },
         error: function (request, status, error) {
@@ -65,7 +66,7 @@ $(function(){
           }
           finally {
             update_error_message(error_message);
-            console.error("Error on requesting PUT '/games/" + current_game_id + " with body: {knocked_pins: " + knocked_pins + "}");
+            console.error("Error on requesting PUT '"+ api_url_path + current_game_id + "' with body: {knocked_pins: " + knocked_pins + "}");
             console.error(request);
           }
         }
