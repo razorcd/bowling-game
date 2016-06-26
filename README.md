@@ -2,7 +2,9 @@
 
 Rules: https://en.wikipedia.org/wiki/Ten-pin_bowling
 
-Start server and access the APIs or try the rough SPA demo at `http://localhost:3000/demo`
+Start the server and call the REST JSON API or try the rough SPA demo at `http://localhost:3000/demo`
+
+Read the [API documentation](https://github.com/razorcd/bowling-game/blob/master/API_doc.md) for endpoints details.
 
 ##Development
 
