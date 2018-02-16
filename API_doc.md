@@ -20,7 +20,7 @@ response:
 Will create a new game and return it's `id`
 
 response: 
-  HTTP OK 201
+  HTTP 201 Created
 ``` json
 {
   "id": 80
@@ -34,19 +34,19 @@ response:
 Will add the knocked down pins to the score and update the db record.
 
 response: 
-  HTTP OK 204
+  HTTP 204 No Content
 ``` json
 { }
 ```
 
-  HTTP OK 422
+  HTTP 422 Unprocessable Entity
 ``` json
 {
   "message": "Can't knock more pins than available."
 }
 ```
 
-  HTTP OK 422
+  HTTP 422 Unprocessable Entity
 ``` json
 {
   "message": "This game is over."
