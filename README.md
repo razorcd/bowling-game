@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/razorcd/bowling-game.svg?branch=master)](https://travis-ci.org/razorcd/bowling-game)
 
-#Bowling Game Score Board API
+# Bowling Game Score Board API
 
 Rules: 
 
@@ -14,12 +14,12 @@ Read the [API documentation](https://github.com/razorcd/bowling-game/blob/master
 
 [LIVE DEMO](http://bowling-game-demo.herokuapp.com/demo)
 
-##Development
+## Development
 
   - `bundle` to install dependencies
   - `rspec` to run tests
 
-##TODO
+## TODO
 
 - [x] implement game logic using TDD (test first)
 - [x] persist it's state to handle stateless requests
